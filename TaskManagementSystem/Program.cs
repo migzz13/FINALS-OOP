@@ -82,7 +82,7 @@ namespace TaskManagementSystem
                 return null;
             }
 
-            if (DateTime.TryParseExact(dateTimeString, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result))
+            if (DateTime.TryParse(dateTimeString, out DateTime result))
             {
                 return result;
             }
@@ -104,9 +104,10 @@ namespace TaskManagementSystem
                 string headerLine = sr.ReadLine();
                 string[] headers = headerLine.Split(',');
 
-                while (!sr.EndOfStream)
+                string line;
+                while ((line = sr.ReadLine()) != null)
                 {
-                    var values = sr.ReadLine().Split(',');
+                    var values = line.Split(',');
 
                     if (values.Length == headers.Length)
                     {

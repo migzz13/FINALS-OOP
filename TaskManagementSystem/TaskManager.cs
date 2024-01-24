@@ -29,22 +29,22 @@ namespace TaskManagementSystem
                     Console.WriteLine($"Creation Time: {task.CreationTime}");
                     Console.WriteLine($"Assigned To: {task.AssignedTo}");
 
-                    if (task.AssignmentTime.HasValue)
+                    if (task.AssignmentTime != null)
                     {
                         Console.WriteLine($"Assignment Time: {task.AssignmentTime}");
                     }
                     else
                     {
-                        Console.WriteLine("Assignment Time: (not assigned)");
+                        Console.WriteLine("Assignment Time: (Not assigned)");
                     }
 
-                    if (task.CompletionTime.HasValue)
+                    if (task.CompletionTime != null)
                     {
                         Console.WriteLine($"Completion Time: {task.CompletionTime}");
                     }
                     else
                     {
-                        Console.WriteLine("Completion Time: (not completed)");
+                        Console.WriteLine("Completion Time: (Not completed)");
                     }
 
                     Console.WriteLine($"Comment/s: {(string.IsNullOrEmpty(task.Comments) ? "No comment" : task.Comments)}");
@@ -58,7 +58,7 @@ namespace TaskManagementSystem
                         }
                         else
                         {
-                            Console.WriteLine("Verification Time: (not verified)");
+                            Console.WriteLine("Verification Time: (Not verified)");
                         }
 
                         Console.WriteLine($"Verifier Name: {task.VerifierDetails}");
@@ -80,11 +80,11 @@ namespace TaskManagementSystem
             Console.WriteLine("\nEnter Task Description:");
             string description = Console.ReadLine();
 
-            Console.WriteLine("\nEnter Assigned To (leave blank for 'not assigned'):");
+            Console.WriteLine("\nEnter Assigned To (leave blank for 'Not assigned'):");
             string assignedTo = Console.ReadLine();
             assignedTo = string.IsNullOrEmpty(assignedTo) ? "Not assigned" : assignedTo;
 
-            Console.WriteLine("\nEnter Assignment Time (leave blank for current time):");
+            Console.WriteLine("\nEnter Assignment Time (Leave blank for current time):");
             string assignmentTimeString = Console.ReadLine();
             DateTime? assignmentTime = string.IsNullOrEmpty(assignmentTimeString)
                 ? (DateTime?)null
@@ -111,7 +111,7 @@ namespace TaskManagementSystem
                 AssignedTo = assignedTo,
                 AssignmentTime = assignmentTime,
                 CompletionTime = isCompleted ? GetCompletionTime() : null,
-                TaskStatus = isCompleted ? "For Verification" : (string.IsNullOrEmpty(assignedTo) || assignedTo.Equals("Not assigned", StringComparison.OrdinalIgnoreCase) ? "Open" : "Assigned"),
+                TaskStatus = isCompleted ? "For Verification" : (string.IsNullOrEmpty(assignedTo) || assignedTo.ToLower() == "Not assigned") ? "Open" : "Assigned",
                 VerificationStatus = isCompleted ? "For Verification" : "Not Verified"
             };
 
@@ -141,14 +141,14 @@ namespace TaskManagementSystem
 
             if (task != null)
             {
-                Console.WriteLine("\nEnter new Assigned To (leave blank for 'not assigned'):");
+                Console.WriteLine("\nEnter new Assigned To (Leave blank for 'Not assigned'):");
                 string newAssignedTo = Console.ReadLine();
                 newAssignedTo = string.IsNullOrEmpty(newAssignedTo) ? "Not assigned" : newAssignedTo;
 
                 task.AssignedTo = newAssignedTo;
-                task.TaskStatus = string.IsNullOrEmpty(newAssignedTo) || newAssignedTo.Equals("Not assigned", StringComparison.OrdinalIgnoreCase)
-                    ? "Open"
-                    : "Assigned";
+                task.TaskStatus = string.IsNullOrEmpty(newAssignedTo) || newAssignedTo.ToLower() == "Not assigned"
+                ? "Open"
+                : "Assigned";
 
                 Console.WriteLine("Assigned or replaced successfully.");
             }
@@ -171,7 +171,7 @@ namespace TaskManagementSystem
 
                 string commentTypeChoice = Console.ReadLine();
 
-                Console.WriteLine("Enter Comment (leave blank for no comment):");
+                Console.WriteLine("Enter Comment (Leave blank for no comment):");
                 string comment = Console.ReadLine();
 
                 if (string.IsNullOrEmpty(comment))
@@ -205,7 +205,7 @@ namespace TaskManagementSystem
 
         private void AddTaskRelatedComment(Task task, string comment)
         {
-            if (string.IsNullOrEmpty(task.Comments) || task.Comments.Equals("no comment", StringComparison.OrdinalIgnoreCase))
+            if (string.IsNullOrEmpty(task.Comments) || task.Comments.ToLower() == "No comment")
             {
                 task.Comments = comment;
             }
@@ -217,7 +217,7 @@ namespace TaskManagementSystem
 
         private void AddVerificationComment(Task task, string comment)
         {
-            if (string.IsNullOrEmpty(task.VerificationComments) || task.VerificationComments.Equals("no comment", StringComparison.OrdinalIgnoreCase))
+            if (string.IsNullOrEmpty(task.VerificationComments) || task.VerificationComments.ToLower() == "No comment")
             {
                 task.VerificationComments = comment;
             }
@@ -242,7 +242,7 @@ namespace TaskManagementSystem
                         task.VerificationStatus = "Not Verified";
 
 
-                        task.Comments += $"{(string.IsNullOrEmpty(completionComment) ? "no comment" : completionComment)}";
+                        task.Comments += $"{(string.IsNullOrEmpty(completionComment) ? "No comment" : completionComment)}";
 
                         Console.WriteLine("Task completed successfully and waiting for verification.");
                     }
@@ -270,7 +270,7 @@ namespace TaskManagementSystem
 
         private DateTime? GetCompletionTime()
         {
-            Console.WriteLine("\nEnter Completion Time (Format: M/DD/YY HH:MM:SS or Leave blank for current time):");
+            Console.WriteLine("\nEnter Completion Time (Format: M/DD/YY HH:MM:SS or leave blank for current time):");
             string completionTimeString = Console.ReadLine();
 
             if (string.IsNullOrEmpty(completionTimeString))
@@ -355,7 +355,7 @@ namespace TaskManagementSystem
 
         private (DateTime?, string) GetVerificationDetails()
         {
-            Console.WriteLine("\nEnter Verification Time (Format: M/DD/YY HH:MM:SS or Leave blank for current time):");
+            Console.WriteLine("\nEnter Verification Time (Format: M/DD/YY HH:MM:SS or leave blank for current time):");
             string verificationTimeString = Console.ReadLine();
             DateTime? verificationTime = string.IsNullOrEmpty(verificationTimeString)
                 ? DateTime.Now
