@@ -12,6 +12,11 @@ namespace TaskManagementSystem
     {
         static void Main(string[] args)
         {
+            StartTaskManager();
+        }
+
+        private static void StartTaskManager()
+        {
             var initialTasks = StreamReader("TaskData.csv");
             var taskManager = new TaskManager(initialTasks);
 
