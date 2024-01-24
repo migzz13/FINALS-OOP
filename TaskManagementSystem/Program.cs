@@ -12,7 +12,7 @@ namespace TaskManagementSystem
     {
         static void Main(string[] args)
         {
-            var initialTasks = ReadTasksFromCsv("TaskData.csv");
+            var initialTasks = StreamReader("TaskData.csv");
             var taskManager = new TaskManager(initialTasks);
 
             while (true)
@@ -43,29 +43,29 @@ namespace TaskManagementSystem
                         string deleteTaskDescription = Console.ReadLine();
                         taskManager.DeleteTask(deleteTaskDescription);
                         break;
-                    case "4": // Assign or Replace Assigned To
+                    case "4":
                         Console.WriteLine("\nEnter Task Description to assign or replace:");
                         string assignReplaceTaskDescription = Console.ReadLine();
-                        taskManager.AssignOrReplaceAssignedTo(assignReplaceTaskDescription);
+                        taskManager.AssignTask(assignReplaceTaskDescription);
                         break;
-                    case "5": // Add Comment
+                    case "5":
                         Console.WriteLine("\nEnter Task Description to add a comment:");
                         string commentTaskDescription = Console.ReadLine();
-                        taskManager.AddTaskComment(commentTaskDescription);
+                        taskManager.AddComment(commentTaskDescription);
                         break;
-                    case "6": // Complete Task
+                    case "6":
                         Console.WriteLine("\nEnter Task Description to complete:");
                         string completeTaskDescription = Console.ReadLine();
                         taskManager.CompleteTask(completeTaskDescription, DateTime.Now, string.Empty);
                         break;
-                    case "7": // Verify Task
+                    case "7":
                         Console.WriteLine("\nEnter Task Description to verify:");
                         string verifyTaskDescription = Console.ReadLine();
                         taskManager.VerifyTask(verifyTaskDescription);
                         break;
-                    case "8": // Exit
+                    case "8":
                         Console.WriteLine("Exiting Task Management Application.");
-                        taskManager.SaveTasksToFile(); // Save tasks before exiting
+                        taskManager.StreamWriter();
                         return;
 
                     default:
@@ -79,7 +79,7 @@ namespace TaskManagementSystem
         {
             if (string.IsNullOrWhiteSpace(dateTimeString))
             {
-                return null; // Return DateTime? (nullable DateTime) with no value
+                return null;
             }
 
             if (DateTime.TryParseExact(dateTimeString, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result))
@@ -89,7 +89,7 @@ namespace TaskManagementSystem
             return DateTime.Now;
         }
 
-        private static List<Task> ReadTasksFromCsv(string filePath)
+        private static List<Task> StreamReader(string filePath)
         {
             var tasks = new List<Task>();
 
@@ -150,7 +150,6 @@ namespace TaskManagementSystem
                                     task.VerificationComments = values[i];
                                     break;
                                 default:
-                                    // Handle unknown headers or skip them
                                     break;
                             }
                         }
@@ -159,7 +158,6 @@ namespace TaskManagementSystem
                     }
                 }
             }
-
             return tasks;
         }
     }

@@ -118,7 +118,48 @@ namespace TaskManagementSystem
             tasks.Add(newTask);
         }
 
-        public void AddTaskComment(string taskDescription)
+        public void DeleteTask(string taskDescription)
+        {
+            var task = FindTask(taskDescription);
+
+            if (task != null)
+            {
+                tasks.Remove(task);
+                Console.WriteLine("Task deleted successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Task not found.");
+            }
+
+            StreamWriter();
+        }
+
+        public void AssignTask(string taskDescription)
+        {
+            var task = FindTask(taskDescription);
+
+            if (task != null)
+            {
+                Console.WriteLine("\nEnter new Assigned To (leave blank for 'not assigned'):");
+                string newAssignedTo = Console.ReadLine();
+                newAssignedTo = string.IsNullOrEmpty(newAssignedTo) ? "Not assigned" : newAssignedTo;
+
+                task.AssignedTo = newAssignedTo;
+                task.TaskStatus = string.IsNullOrEmpty(newAssignedTo) || newAssignedTo.Equals("Not assigned", StringComparison.OrdinalIgnoreCase)
+                    ? "Open"
+                    : "Assigned";
+
+                Console.WriteLine("Assigned or replaced successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Task not found.");
+            }
+
+            StreamWriter();
+        }
+        public void AddComment(string taskDescription)
         {
             var task = FindTask(taskDescription);
 
@@ -159,35 +200,9 @@ namespace TaskManagementSystem
                 Console.WriteLine("Task not found.");
             }
 
-            SaveTasksToFile();
+            StreamWriter();
         }
 
-        public void AssignOrReplaceAssignedTo(string taskDescription)
-        {
-            var task = FindTask(taskDescription);
-
-            if (task != null)
-            {
-                Console.WriteLine("\nEnter new Assigned To (leave blank for 'not assigned'):");
-                string newAssignedTo = Console.ReadLine();
-                newAssignedTo = string.IsNullOrEmpty(newAssignedTo) ? "Not assigned" : newAssignedTo;
-
-                task.AssignedTo = newAssignedTo;
-
-                // Update TaskStatus based on the new assignment
-                task.TaskStatus = string.IsNullOrEmpty(newAssignedTo) || newAssignedTo.Equals("Not assigned", StringComparison.OrdinalIgnoreCase)
-                    ? "Open"
-                    : "Assigned";
-
-                Console.WriteLine("Assigned or replaced successfully.");
-            }
-            else
-            {
-                Console.WriteLine("Task not found.");
-            }
-
-            SaveTasksToFile();
-        }
         private void AddTaskRelatedComment(Task task, string comment)
         {
             if (string.IsNullOrEmpty(task.Comments) || task.Comments.Equals("no comment", StringComparison.OrdinalIgnoreCase))
@@ -212,36 +227,6 @@ namespace TaskManagementSystem
             }
         }
 
-
-        private DateTime? GetCompletionTime()
-        {
-            Console.WriteLine("\nEnter Completion Time (Format: M/DD/YY HH:MM:SS or Leave blank for current time):");
-            string completionTimeString = Console.ReadLine();
-
-            if (string.IsNullOrEmpty(completionTimeString))
-            {
-                return DateTime.Now;
-            }
-
-            return DateTime.Parse(completionTimeString);
-        }
-
-        public void DeleteTask(string taskDescription)
-        {
-            var task = FindTask(taskDescription);
-
-            if (task != null)
-            {
-                tasks.Remove(task);
-                Console.WriteLine("Task deleted successfully.");
-            }
-            else
-            {
-                Console.WriteLine("Task not found.");
-            }
-
-            SaveTasksToFile();
-        }
         public void CompleteTask(string taskDescription, DateTime? completionTime, string completionComment)
         {
             var task = FindTask(taskDescription);
@@ -256,7 +241,7 @@ namespace TaskManagementSystem
                         task.TaskStatus = "For Verification";
                         task.VerificationStatus = "Not Verified";
 
-                        // Append the completion comment without timestamp to the Comments column
+
                         task.Comments += $"{(string.IsNullOrEmpty(completionComment) ? "no comment" : completionComment)}";
 
                         Console.WriteLine("Task completed successfully and waiting for verification.");
@@ -280,7 +265,20 @@ namespace TaskManagementSystem
                 Console.WriteLine("Task not found.");
             }
 
-            SaveTasksToFile();
+            StreamWriter();
+        }
+
+        private DateTime? GetCompletionTime()
+        {
+            Console.WriteLine("\nEnter Completion Time (Format: M/DD/YY HH:MM:SS or Leave blank for current time):");
+            string completionTimeString = Console.ReadLine();
+
+            if (string.IsNullOrEmpty(completionTimeString))
+            {
+                return DateTime.Now;
+            }
+
+            return DateTime.Parse(completionTimeString);
         }
 
         public void VerifyTask(string taskDescription)
@@ -291,7 +289,7 @@ namespace TaskManagementSystem
             {
                 if (task.TaskStatus == "For Verification")
                 {
-                    if (task.CompletionTime.HasValue) // Check if the task is completed
+                    if (task.CompletionTime.HasValue)
                     {
                         (task.VerificationTime, task.VerifierDetails) = GetVerificationDetails();
 
@@ -333,7 +331,7 @@ namespace TaskManagementSystem
                 Console.WriteLine("Task not found.");
             }
 
-            SaveTasksToFile();
+            StreamWriter();
         }
 
 
@@ -368,7 +366,7 @@ namespace TaskManagementSystem
 
             return (verificationTime, verifierName);
         }
-        public void SaveTasksToFile()
+        public void StreamWriter()
         {
             try
             {
@@ -382,13 +380,11 @@ namespace TaskManagementSystem
                             ? task.AssignmentTime.Value.ToString()
                             : string.Empty;
 
-                        // Properly handle the comments to avoid disrupting the row structure
                         string comments = task.Comments != null ? task.Comments.Replace("\n", "\\n") : string.Empty;
 
                         sw.WriteLine($"{task.TaskDescription},{task.CreationTime},{task.AssignedTo},{assignmentTimeStr},{task.CompletionTime},{task.TaskStatus},{comments},{task.VerificationStatus},{task.VerificationTime},{task.VerifierDetails},{task.VerificationComments}");
                     }
-
-                    sw.Flush(); // Flush the writer
+                    sw.Close();
                 }
             }
             catch (Exception ex)
