@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace TaskManagementSystem
@@ -20,9 +21,22 @@ namespace TaskManagementSystem
             var initialTasks = StreamReader("TaskData.csv");
             var taskManager = new TaskManager(initialTasks);
 
+            Console.Write("Loading task manager");
+            Thread.Sleep(750);
+            Console.Write(".");
+            Thread.Sleep(750);
+            Console.Write(".");
+            Thread.Sleep(750);
+            Console.Write(".");
+            Thread.Sleep(1250);
+
+            Console.Clear();
+
+            Console.WriteLine("Welcome To Task Manager!\n");
+
             while (true)
             {
-                Console.WriteLine("\nTask Management Application:");
+                Console.WriteLine("Please select an option:");
                 Console.WriteLine("1. Display Tasks");
                 Console.WriteLine("2. Add Task");
                 Console.WriteLine("3. Delete Task");
@@ -41,36 +55,65 @@ namespace TaskManagementSystem
                         taskManager.DisplayTasks();
                         break;
                     case "2":
-                        taskManager.AddTask();
+                        taskManager.AddTask(); 
+                        Console.WriteLine("Press any key to continue");
+                        Console.ReadKey();
+                        Console.Clear();
                         break;
                     case "3":
                         Console.WriteLine("\nEnter Task Description to delete:");
                         string deleteTaskDescription = Console.ReadLine();
                         taskManager.DeleteTask(deleteTaskDescription);
+                        Console.WriteLine("Press any key to continue");
+                        Console.ReadKey();
+                        Console.Clear();
                         break;
                     case "4":
                         Console.WriteLine("\nEnter Task Description to assign or replace:");
                         string assignReplaceTaskDescription = Console.ReadLine();
                         taskManager.AssignTask(assignReplaceTaskDescription);
+                        Console.WriteLine("Press any key to continue");
+                        Console.ReadKey();
+                        Console.Clear();
                         break;
                     case "5":
                         Console.WriteLine("\nEnter Task Description to add a comment:");
                         string commentTaskDescription = Console.ReadLine();
                         taskManager.AddComment(commentTaskDescription);
+                        Console.WriteLine("Press any key to continue");
+                        Console.ReadKey();
+                        Console.Clear();
                         break;
                     case "6":
                         Console.WriteLine("\nEnter Task Description to complete:");
                         string completeTaskDescription = Console.ReadLine();
                         taskManager.CompleteTask(completeTaskDescription, DateTime.Now, string.Empty);
+                        Console.WriteLine("Press any key to continue");
+                        Console.ReadKey();
+                        Console.Clear();
                         break;
                     case "7":
                         Console.WriteLine("\nEnter Task Description to verify:");
                         string verifyTaskDescription = Console.ReadLine();
                         taskManager.VerifyTask(verifyTaskDescription);
+                        Console.WriteLine("Press any key to continue");
+                        Console.ReadKey();
+                        Console.Clear();
                         break;
                     case "8":
-                        Console.WriteLine("Exiting Task Management Application.");
+                        Console.Clear();
+                        Console.WriteLine("Thank you for using Task Manager\n");
                         taskManager.StreamWriter();
+                        Thread.Sleep(1250);
+                        Console.Clear();
+                        Console.Write("Now Exiting Task Manager");
+                        Thread.Sleep(750);
+                        Console.Write(".");
+                        Thread.Sleep(750);
+                        Console.Write(".");
+                        Thread.Sleep(750);
+                        Console.Write(".");
+                        Thread.Sleep(1750);
                         return;
 
                     default:
@@ -100,7 +143,6 @@ namespace TaskManagementSystem
 
             if (!File.Exists(filePath))
             {
-                Console.WriteLine($"Error: File '{filePath}' not found.");
                 return tasks;
             }
 

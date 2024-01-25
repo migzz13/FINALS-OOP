@@ -84,7 +84,7 @@ namespace TaskManagementSystem
             string assignedTo = Console.ReadLine();
             assignedTo = string.IsNullOrEmpty(assignedTo) ? "Not assigned" : assignedTo;
 
-            Console.WriteLine("\nEnter Assignment Time (Leave blank for current time):");
+            Console.WriteLine("\nEnter Assignment Time (Format: M/DD/YY HH:MM:SS AM/PM or leave blank for current time):");
             string assignmentTimeString = Console.ReadLine();
             DateTime? assignmentTime = string.IsNullOrEmpty(assignmentTimeString)
                 ? (DateTime?)null
@@ -270,7 +270,7 @@ namespace TaskManagementSystem
 
         private DateTime? GetCompletionTime()
         {
-            Console.WriteLine("\nEnter Completion Time (Format: M/DD/YY HH:MM:SS or leave blank for current time):");
+            Console.WriteLine("\nEnter Completion Time (Format: M/DD/YY HH:MM:SS AM/PM or leave blank for current time):");
             string completionTimeString = Console.ReadLine();
 
             if (string.IsNullOrEmpty(completionTimeString))
@@ -355,7 +355,7 @@ namespace TaskManagementSystem
 
         private (DateTime?, string) GetVerificationDetails()
         {
-            Console.WriteLine("\nEnter Verification Time (Format: M/DD/YY HH:MM:SS or leave blank for current time):");
+            Console.WriteLine("\nEnter Verification Time (Format: M/DD/YY HH:MM:SS AM/PM or leave blank for current time):");
             string verificationTimeString = Console.ReadLine();
             DateTime? verificationTime = string.IsNullOrEmpty(verificationTimeString)
                 ? DateTime.Now
