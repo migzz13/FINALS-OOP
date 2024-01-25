@@ -22,13 +22,13 @@ namespace TaskManagementSystem
             var taskManager = new TaskManager(initialTasks);
 
             Console.Write("Loading task manager");
-            Thread.Sleep(750);
+            Thread.Sleep(400);
             Console.Write(".");
-            Thread.Sleep(750);
+            Thread.Sleep(400);
             Console.Write(".");
-            Thread.Sleep(750);
+            Thread.Sleep(400);
             Console.Write(".");
-            Thread.Sleep(1250);
+            Thread.Sleep(800);
 
             Console.Clear();
 
@@ -104,16 +104,16 @@ namespace TaskManagementSystem
                         Console.Clear();
                         Console.WriteLine("Thank you for using Task Manager\n");
                         taskManager.StreamWriter();
-                        Thread.Sleep(1250);
+                        Thread.Sleep(800);
                         Console.Clear();
                         Console.Write("Now Exiting Task Manager");
-                        Thread.Sleep(750);
+                        Thread.Sleep(400);
                         Console.Write(".");
-                        Thread.Sleep(750);
+                        Thread.Sleep(400);
                         Console.Write(".");
-                        Thread.Sleep(750);
+                        Thread.Sleep(400);
                         Console.Write(".");
-                        Thread.Sleep(1750);
+                        Thread.Sleep(1000);
                         return;
 
                     default:
